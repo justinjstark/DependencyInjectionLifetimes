@@ -1,5 +1,11 @@
 # Dependency Injection Lifetimes
 
+Lifetimes are a basic building block of dependency injection. They tell the IoC Container when to instantiate a new object vs when to use one that already exists.
+
+Even if you are not familiar with dependency injection, you are most likely still familiar with lifetimes. When not using dependency injection, we still have to worry about the lifetime or our dependencies. This is usually done using static singletons, object factories,
+
+Microsoft.Extensions.DependencyInjection provides three lifetimes: transient, singleton, and scoped.
+
 ### Transient
 
 A class is instantiated for every dependency. This is the standard lifetime and should be used unless another lifetime is required.

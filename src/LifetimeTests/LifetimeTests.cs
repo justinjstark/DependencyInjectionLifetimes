@@ -1,5 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
+using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace LifetimeTests
@@ -83,5 +85,52 @@ namespace LifetimeTests
 
             dependency1.ShouldBeSameAs(dependency2);
         }
+
+        [Fact]
+        public void HttpClientFactory()
+        {
+            var services = new ServiceCollection();
+
+            services.AddTransient<DependencyWithHttp>();
+            services.AddHttpClient<DependencyWithHttp>();
+
+            var provider = services.BuildServiceProvider();
+
+            var dependency = provider.GetRequiredService<DependencyWithHttp>();
+
+            dependency.HttpClient.ShouldNotBeNull();
+        }
+    }
+
+    public class ParallelJobRunner
+    {
+        private readonly IServiceScopeFactory _serviceScopeFactory;
+
+        public ParallelJobRunner(IServiceScopeFactory serviceScopeFactory)
+        {
+            _serviceScopeFactory = serviceScopeFactory;
+        }
+
+        public async Task RunLotsOfParallelJobs()
+        {
+            await Task.WhenAll(Enumerable.Range(1, 100)
+                .Select(_ => RunASingleJob())
+                .ToArray());
+        }
+
+        private async Task RunASingleJob()
+        {
+            using(var scope = _serviceScopeFactory.CreateScope())
+            {
+                var job = scope.ServiceProvider.GetRequiredService<IJob>();
+
+                await job.Run();
+            }
+        }
+    }
+
+    public interface IJob
+    {
+        Task Run();
     }
 }
