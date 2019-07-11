@@ -10,7 +10,7 @@ In low volume situations, AddDbContext is the better choice as it allows DbConte
 
 For applications with many concurring scopes (ex: web applications or applications with many concurrent, independent jobs), use AddDbContextPool. Otherwise use AddDbContext.
 
-## HttpClientFactory
+## HttpClient
 
 HttpClient should not be used directly with using statements because disposal of the HttpClient before the socket is released can lead to socket exhaustion. It should also not be used as a singleton because it will not pick up DNS changes. This has often tripped up developers as there was no obvious way to use HttpClient correctly.
 

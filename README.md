@@ -5,11 +5,11 @@ Demonstrations, Tests, and Examples of Dependency Injection Lifetimes in .NET Co
 
 ### [Lifetimes](https://github.com/justinjstark/DependencyInjectionLifetimes/tree/master/src/Lifetimes)
 
-Want to learn about transient, scoped, and singleton lifetimes? Wondering about the difference between AddDbContext and AddDbContextPool? Start here.
+Want to learn about transient, scoped, and singleton lifetimes? Start here.
 
 ### [Lifetime Tests](https://github.com/justinjstark/DependencyInjectionLifetimes/tree/master/src/LifetimeTests)
 
-Simple tests demonstrating transient, scoped, and singleton lifecycles. If you are new to dependency injection lifetimes, these test provide simple use cases to build an understanding.
+Simple tests demonstrating transient, scoped, and singleton lifecycles. If you are new to dependency injection lifetimes, these tests provide simple use cases to build an understanding.
 
 ### [Best Practices](https://github.com/justinjstark/DependencyInjectionLifetimes/tree/master/src/BestPractices)
 
