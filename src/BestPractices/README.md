@@ -48,30 +48,30 @@ In the below example, any DbContext or other service with a scoped lifecycle has
 
 ```cs
 public class ParallelJobRunner
+{
+    private readonly IServiceScopeFactory _serviceScopeFactory;
+
+    public ParallelJobRunner(IServiceScopeFactory serviceScopeFactory)
     {
-        private readonly IServiceScopeFactory _serviceScopeFactory;
+        _serviceScopeFactory = serviceScopeFactory;
+    }
 
-        public ParallelJobRunner(IServiceScopeFactory serviceScopeFactory)
+    public async Task RunLotsOfParallelJobs()
+    {
+        await Task.WhenAll(
+            Enumerable.Range(1, 100)
+                        .Select(_ => RunASingleJob())
+                        .ToArray());
+    }
+
+    private async Task RunASingleJob()
+    {
+        using(var scope = _serviceScopeFactory.CreateScope())
         {
-            _serviceScopeFactory = serviceScopeFactory;
-        }
+            var job = scope.ServiceProvider.GetRequiredService<IJob>();
 
-        public async Task RunLotsOfParallelJobs()
-        {
-            await Task.WhenAll(
-                Enumerable.Range(1, 100)
-                          .Select(_ => RunASingleJob())
-                          .ToArray());
-        }
-
-        private async Task RunASingleJob()
-        {
-            using(var scope = _serviceScopeFactory.CreateScope())
-            {
-                var job = scope.ServiceProvider.GetRequiredService<IJob>();
-
-                await job.Run();
-            }
+            await job.Run();
         }
     }
+}
 ```
