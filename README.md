@@ -9,7 +9,7 @@ Want to learn about transient, scoped, and singleton lifetimes? Start here.
 
 ### [Lifetime Tests](https://github.com/justinjstark/DependencyInjectionLifetimes/tree/master/src/LifetimeTests)
 
-Simple tests demonstrating transient, scoped, and singleton lifecycles. If you are new to dependency injection lifetimes, these tests provide simple use cases to build an understanding.
+Simple tests demonstrating transient, scoped, and singleton lifetimes. If you are new to dependency injection lifetimes, these tests provide simple use cases to build an understanding.
 
 ### [Best Practices](https://github.com/justinjstark/DependencyInjectionLifetimes/tree/master/src/BestPractices)
 
