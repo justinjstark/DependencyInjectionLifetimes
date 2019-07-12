@@ -2,13 +2,13 @@
 
 Lifetimes are a basic building block of dependency injection. They tell the IoC Container when to instantiate a new object vs when to use one that already exists.
 
-Even if you are not familiar with dependency injection, you are most likely still familiar with lifetimes. When not using dependency injection, we still have to worry about the lifetime of our services. This is usually done using static singletons, factories, and similar techniques. With dependency injection the responsibility of controlling service lifetime moves from the individual components to application startup when services are registered.
+You most likely deal with service lifetimes even if you are not familiar with dependency injection. This is usually done using static singletons, factories, and similar techniques. With dependency injection the responsibility of controlling service lifetimes moves from code patterns and service internals to the application root where services are registered at application startup.
 
 Microsoft.Extensions.DependencyInjection provides three lifetimes: transient, singleton, and scoped.
 
 ### Transient
 
-A class is instantiated for every dependency. This is the standard lifetime and should be used unless another lifetime is required.
+A new service is instantiated every time one is requested. This is the standard lifetime and should be used unless another lifetime is required.
 
 In the following object graphs, if Z has a transient lifetime, a new Z will be instantiated for each Z node.
 
@@ -52,9 +52,11 @@ Z
 
 ### Scoped
 
-Scoped is the most complex lifetime. The lifetime of each component is a singleton within a scope but transient across scopes.
+Scoped is the most complex lifetime. The lifetime of a scoped service is a singleton within a scope but transient across scopes. Scoped lifetimes permit lower layers of the application to control the lifetime of scoped services by creating scopes.
 
-The most common example of a scoped lifetime is using an Entity Framework DbContext within a web application. A DbContext represents a single unit of work and a single DbContext should be used across an entire HTTP request. In .NET web applications, there is a built in scope for each HTTP request. When you register a DbContext using AddDbContext, the lifetime of the DbContext is, by default, scoped. Therefore, for each HTTP request, a new DbContext is instantiated and used throughout the request.
+Some third-party containers allow for named scopes which give the application more flexibility to control the lifetime of services.
+
+The most common example of a scoped lifetime is using an Entity Framework DbContext within a web application. A DbContext should not be reused across HTTP requests but should be reused for all services within any HTTP request. In .NET web applications, a new scope is created for each HTTP request. When registering a DbContext using AddDbContext, the lifetime of the DbContext is, by default, scoped. Therefore a new DbContext is instantiated for each HTTP request and used throughout the request.
 
 ```
 Z
@@ -63,53 +65,35 @@ Z
 
 A
 | \
-Z   Z
-
-B
-| \
-C   Z
+B   Z
 |
 Z
 
-Scope 1
+BEGIN SCOPE
 
 Z'
 
 Z'
 
-A
+A'
 | \
-Z'  Z'
-
-B
-| \
-C   Z'
+B'  Z'
 |
 Z'
 
-Scope 2
-
-Z''
-
-Z''
-
-A
+A'2
 | \
-Z'' Z''
-
-B
-| \
-C   Z''
+B'2 Z'
 |
-Z''
+Z'
+
+END SCOPE
+
+Z
+
+A'3
+| \
+B'3 Z
+|
+Z
 ```
-
-## AddDbContext vs AddDbContextPool
-
-In a web application, when registering a DbContext via AddDbContext, a new DbContext is instantiated for each HTTP request.
-
-Using DBContext pooling via AddDbContextPool, a new DbContext is not instantiated with each request. Instead, a pool of DbContexts is kept for reuse. The same DbContext may be used across HTTP requests but it is reset to its default state between requests.
-
-In low volume situations, AddDbContext is the better choice as it allows DbContexts to be disposed of, freeing up resources. In high volume situations, AddDbContextPool allows DbContexts to be reused. This allows for better performance as fewer resources are dedicated to instantiating and disposing of DbContexts.
-
-For applications with many concurring scopes (ex: web applications or applications with many concurrent, independent jobs), use AddDbContextPool. Otherwise use AddDbContext.
