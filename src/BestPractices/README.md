@@ -32,7 +32,7 @@ public class DependencyWithHttp
 
 Install the NuGet package Microsoft.Extensions.Http. This adds an AddHttpClient extension method to the service collection.
 
-```
+```cs
 services.AddHttpClient<DependencyWithHttp>();
 ```
 
