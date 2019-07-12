@@ -12,9 +12,7 @@ For applications with many concurring scopes (ex: web applications or applicatio
 
 ## HttpClient
 
-HttpClient should not be used directly with using statements because disposal of the HttpClient before the socket is released can lead to socket exhaustion. It should also not be used as a singleton because it will not pick up DNS changes. This has often tripped up developers as there was no obvious way to use HttpClient correctly.
-
-In .NET Core, there is a way to use HttpClient that mitigates these issues.
+HttpClient should not be instantiated inline because disposal of the HttpClient before the socket is released can lead to socket exhaustion in high-volume applications. It should also not be used as a singleton because it will not pick up DNS changes. This has often tripped up developers as there was no obvious way to use HttpClient correctly. In .NET Core, there is a way to use HttpClient that mitigates these issues.
 
 In the component needing to send an HTTP request, take a dependency on HttpClient.
 
@@ -40,11 +38,9 @@ This way you can use HttpClient in your component without worrying about DNS sta
 
 ## IServiceScopeFactory
 
-It is sometimes necessary to create scopes from within a dependency. One example of this is an application that runs multiple, concurrent jobs which depend on a DbContext. Since each job is a unit of work, each job should have its own DbContext and any dependency in that job should use the same DbContext.
+It is sometimes necessary to create scopes from within a service. One example of this is an application that runs multiple, concurrent jobs which depend on a DbContext. Each job should have its own DbContext and any service in that job should use the same DbContext.
 
-Instead of trying to pass around the ServiceProvider to create a scope, have the class depend on an IServiceScopeFactory.
-
-In the below example, any DbContext or other service with a scoped lifecycle has a new instance for each job run but will be reused throughout the job.
+Instead of passing around the ServiceProvider to create a scope, have the service depend on an IServiceScopeFactory. In the following example, any DbContext or other service with a scoped lifetime will be instantiated for each job but the instance will be reused throughout the job.
 
 ```cs
 public class ParallelJobRunner
@@ -60,8 +56,8 @@ public class ParallelJobRunner
     {
         await Task.WhenAll(
             Enumerable.Range(1, 100)
-                        .Select(_ => RunASingleJob())
-                        .ToArray());
+                      .Select(_ => RunASingleJob())
+                      .ToArray());
     }
 
     private async Task RunASingleJob()
