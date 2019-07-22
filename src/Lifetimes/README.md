@@ -2,7 +2,7 @@
 
 Lifetimes are a basic building block of dependency injection. They tell the IoC Container when to instantiate a new service vs when to use one that already exists.
 
-You most likely deal with service lifetimes even if you are not familiar with dependency injection. This is usually done using static singletons, factories, and similar techniques. With dependency injection the responsibility of controlling service lifetimes moves from code patterns and service internals to the application root where services are registered at application startup.
+You most likely deal with service lifetimes even if you are not familiar with dependency injection. This is usually done using static singletons, factories, or passing service instances around. With dependency injection the responsibility of controlling service lifetimes moves from code patterns and service internals to the application root where services are registered at application startup.
 
 Microsoft.Extensions.DependencyInjection provides three lifetimes: transient, singleton, and scoped.
 
