@@ -26,7 +26,7 @@ public class ScopedJobFactory : IJobFactory
         if (!_scopes.TryAdd(job, scope))
         {
             scope.Dispose();
-            throw new Exception("Error disposing job lifetime scope");
+            throw new Exception("Error storing job lifetime scope");
         }
 
         return job;
