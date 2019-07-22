@@ -15,7 +15,7 @@ public class ScopedJobFactory : IJobFactory
         IJob job;
         try
         {
-            job = scope.ServiceProvider.GetRequiredService(bundle.JobDetail.JobType) as IJob;
+            job = (IJob)scope.ServiceProvider.GetRequiredService(bundle.JobDetail.JobType);
         }
         catch
         {
