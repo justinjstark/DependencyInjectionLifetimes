@@ -21,3 +21,7 @@ A list of best practices including
 ### [Recurring Console Application](https://github.com/justinjstark/DependencyInjectionLifetimes/tree/master/src/RecurringConsoleApplication)
 
 A console application that runs a job every five seconds. This example demonstrates how to use scopes to properly handle Entity Framework's DbContext and other dependencies where lifetime consideration is important.
+
+### [Quartz.NET ScopedJobFactory](https://github.com/justinjstark/DependencyInjectionLifetimes/tree/master/src/Quartz.NET)
+
+A Quartz.NET IJobFactory that creates a lifetime scope for each job.
