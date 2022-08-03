@@ -1,5 +1,5 @@
 # Dependency Injection Lifetimes
-Demonstrations, Tests, and Examples of Dependency Injection Lifetimes in .NET Core
+Demonstrations, Tests, and Examples of Dependency Injection Lifetimes in .NET
 
 ## Parts
 
